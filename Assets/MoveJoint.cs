@@ -41,20 +41,24 @@ public class MoveJoint : MonoBehaviour {
 				tiltAroundX = Input.GetAxis("Vertical");
 				if (tiltAroundX <= 0) tiltAroundX = tiltAroundX * minXTiltAngle;
 				else tiltAroundX = tiltAroundX * maxXTiltAngle;
+				move = true;
 			}
 			if (Input.GetKey("e")) {
 				tiltAroundY = 1.0F * maxYTiltAngle;
+				move = true;
 	 		} else if (Input.GetKey("q")) {
 				tiltAroundY = -1.0F * minYTiltAngle;
+				move = true;
 			}
 
 			if (Input.GetAxis("Horizontal") != 0.0F) {
 				tiltAroundZ = Input.GetAxis("Horizontal");
 				if (tiltAroundZ <= 0) tiltAroundZ = tiltAroundZ * minZTiltAngle;
 				else tiltAroundZ = tiltAroundZ * maxZTiltAngle;
+				move = true;
 			}
 
-			MoveWithKey(tiltAroundX, tiltAroundY, tiltAroundZ);
+			if(move) MoveWithKey(tiltAroundX, tiltAroundY, tiltAroundZ);
 	}
 
 	void MoveWithKey(float tiltAroundX, float tiltAroundY, float tiltAroundZ) {
@@ -67,7 +71,6 @@ public class MoveJoint : MonoBehaviour {
 
 	// This function should receive values between -1.0 and 1.0
 	public void Move(float tiltAroundX, float tiltAroundY, float tiltAroundZ) {
-		
 		if (tiltAroundX <= 0) tiltAroundX = tiltAroundX * minXTiltAngle;
 		else tiltAroundX = tiltAroundX * maxXTiltAngle;
 			
