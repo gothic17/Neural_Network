@@ -19,6 +19,6 @@ public class ModelController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		moveJoints[0].Move(0.0F, 1.0F, 0.0F);
+		//moveJoints[0].Move(0.0F, 1.0F, 0.0F);
 	}
 }
