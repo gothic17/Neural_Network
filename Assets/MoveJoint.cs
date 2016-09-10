@@ -3,6 +3,8 @@ using System.Collections;
 
 public class MoveJoint : MonoBehaviour {
 
+    // Some comment to check github
+
 		public float minXTiltAngle = 10.0F;
 		public float maxXTiltAngle = 10.0F;
 		public float minYTiltAngle = 10.0F;
