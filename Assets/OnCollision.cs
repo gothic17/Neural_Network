@@ -19,6 +19,8 @@ public class OnCollision : MonoBehaviour {
 			 	}
     		// Debug.Log("Collison enter - " + this.gameObject.name);
 			}
+
+        if (this.name.Equals("Foot.R")) print(this.name);
   }
 
 	/*void OnCollisionStay (Collision collision) {
