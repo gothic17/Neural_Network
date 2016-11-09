@@ -1,0 +1,5 @@
+C:\Users\Bartas\Desktop\Inżynierka\Examples\NeuralNetworks\bin\Debug\NeuralNetworks.dll
+C:\Users\Bartas\Desktop\Inżynierka\Examples\NeuralNetworks\bin\Debug\NeuralNetworks.pdb
+C:\Users\Bartas\Desktop\Inżynierka\Examples\NeuralNetworks\obj\Debug\NeuralNetworks.csprojResolveAssemblyReference.cache
+C:\Users\Bartas\Desktop\Inżynierka\Examples\NeuralNetworks\obj\Debug\NeuralNetworks.dll
+C:\Users\Bartas\Desktop\Inżynierka\Examples\NeuralNetworks\obj\Debug\NeuralNetworks.pdb
