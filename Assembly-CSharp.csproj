@@ -51,6 +51,7 @@
      <Compile Include="Assets\MoveJoint.cs" />
      <Compile Include="Assets\Neuron.cs" />
      <Compile Include="Assets\OnCollision.cs" />
+     <Compile Include="Assets\SelfOrganisingNetwork.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>

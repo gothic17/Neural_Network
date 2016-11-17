@@ -28,12 +28,12 @@ namespace NeuralNetwork {
             return response;
         }
 
-        // Returns strength of the given array. It is calculated according to the Euclidean norm - 
+        // Returns strength of given array. It is calculated according to the Euclidean norm - 
         // Sqrt(Sum(weight(i)^2)). It can be later expanded to use other norms.
-        public static double Strength(double[] input) {
+        public static double Strength(double[] inputSignals) {
             double strenght = 0.0;
-            for (int i = 0; i < input.Length; i++) {
-                strenght += Math.Pow(input[i], 2);
+            for (int i = 0; i < inputSignals.Length; i++) {
+                strenght += Math.Pow(inputSignals[i], 2);
             }
             strenght = Math.Sqrt(strenght);
 
@@ -57,7 +57,7 @@ namespace NeuralNetwork {
         }
 
         // Self learning with maximum
-        public void SelfLearn(double[] inputSignals, double etha, double max) {
+/*        public void SelfLearn(double[] inputSignals, double etha, double max) {
             double previous_response = Response(inputSignals);
 
             if (previous_response < 0.2 * max)
@@ -71,9 +71,9 @@ namespace NeuralNetwork {
             }
         }
 
+*/
         // Generate random value for each weight (between min and max)
-        public void RandomizeWeights(double min, double max, double epsilon) {
-            Random randomGenerator = new Random();
+        public void RandomizeWeights(Random randomGenerator, double min, double max, double epsilon) {
             double length = max - min;
             for (int i = 0; i < weights.Length; i++) {
                 weights[i] = min + length * randomGenerator.NextDouble();
