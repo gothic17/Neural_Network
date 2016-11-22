@@ -1,9 +1,9 @@
 ﻿using System;
 
 namespace NeuralNetwork {
+    [Serializable]
     public class Neuron {
-
-        private int numberOfInputs;
+        public int numberOfInputs;
         private double[] weights;
         private double[] previousWeights;
 
@@ -12,6 +12,11 @@ namespace NeuralNetwork {
             this.numberOfInputs = numberOfInputs;
             weights = new double[numberOfInputs];
             previousWeights = new double[numberOfInputs];
+        }
+
+        // Sigmoidal function used on output of a neuron. output - signal, that will be modified, t - param of sigmoidal function (it is used in exponential function)
+        public double ActivationFunction(double output, double t) {
+            return 1.0 / (1.0 + Math.Exp(-t * output));
         }
 
         // It returns response of neuron - it is Sqrt(Sum(weight(i) * input(i)))
@@ -25,7 +30,7 @@ namespace NeuralNetwork {
                 throw new ArgumentException("Number of input signals unequal to amount of inputs in neuron, or is null");
             }
 
-            return response;
+            return ActivationFunction(response, 0.25);
         }
 
         // Returns strength of given array. It is calculated according to the Euclidean norm - 

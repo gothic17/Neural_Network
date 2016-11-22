@@ -19,7 +19,7 @@ public class OnCollision : MonoBehaviour {
             if (this.name.Equals("Spine") || this.name.Equals("Chest") || this.name.Equals("Neck") || this.name.Equals("Head")) {
                 //print("Aktualizacja sieci - Collider-" + this.name);
                 Scene scene = SceneManager.GetActiveScene(); 
-				SceneManager.LoadScene(scene.name);
+				//SceneManager.LoadScene(scene.name);
 			}
     	// Debug.Log("Collison enter - " + this.gameObject.name);
 		}

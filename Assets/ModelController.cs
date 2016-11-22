@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using System;
+using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
 using NeuralNetwork;
 
 public class ModelController : MonoBehaviour {
-
 	public Collider[] colliders;
 	public MoveJoint[] moveJoints; // All moveJoints in the gameObject
     public MoveJoint[] movableParts; // All moveJoints which can be moved by program (so far only Spine and Legs)
@@ -32,6 +34,35 @@ public class ModelController : MonoBehaviour {
         return inputSignals;
     }
 
+    /// <summary>
+    /// Writes the given object instance to a binary file.
+    /// <para>Object type (and all child types) must be decorated with the [Serializable] attribute.</para>
+    /// <para>To prevent a variable from being serialized, decorate it with the [NonSerialized] attribute; cannot be applied to properties.</para>
+    /// </summary>
+    /// <typeparam name="T">The type of object being written to the XML file.</typeparam>
+    /// <param name="filePath">The file path to write the object instance to.</param>
+    /// <param name="objectToWrite">The object instance to write to the XML file.</param>
+    /// <param name="append">If false the file will be overwritten if it already exists. If true the contents will be appended to the file.</param>
+    public static void WriteToBinaryFile<T>(string filePath, T objectToWrite, bool append = false) {
+        using (Stream stream = File.Open(filePath, append ? FileMode.Append : FileMode.Create)) {
+            var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            binaryFormatter.Serialize(stream, objectToWrite);
+        }
+    }
+
+    /// <summary>
+    /// Reads an object instance from a binary file.
+    /// </summary>
+    /// <typeparam name="T">The type of object to read from the XML.</typeparam>
+    /// <param name="filePath">The file path to read the object instance from.</param>
+    /// <returns>Returns a new instance of the object read from the binary file.</returns>
+    public static T ReadFromBinaryFile<T>(string filePath) {
+        using (Stream stream = File.Open(filePath, FileMode.Open)) {
+            var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
+            return (T)binaryFormatter.Deserialize(stream);
+        }
+    }
+
     // Use this for initialization
     void Start () {
         initialPosition = gameObject.transform.GetChild(0).GetChild(0).position;
@@ -52,11 +83,26 @@ public class ModelController : MonoBehaviour {
         movableParts[5] = moveJoints[10]; // LowerLeg.R
         movableParts[6] = moveJoints[11]; // Foot.R
 
-        kohonensNetwork = new SelfOrganisingNetwork(23, 10, 10); // We set manually size of Kohonen's network as 10x10
-        kohonensNetwork.RandomizeWeightsOfAllNeurons(0.0, 1.0, 0.01);
+        System.Random randomGenerator = new System.Random();
 
-        outputLayer = new LinearNetwork(10 * 10, 21);
-        outputLayer.RandomizeWeightsOfAllNeurons(0.0, 1.0, 0.01);
+        if (File.Exists("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\KohonensNetwork.txt")) {
+            kohonensNetwork = ReadFromBinaryFile<SelfOrganisingNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\KohonensNetwork.txt");
+        } else {
+            kohonensNetwork = new SelfOrganisingNetwork(23, 10, 10, randomGenerator); // We set manually size of Kohonen's network as 10x10
+            kohonensNetwork.RandomizeWeightsOfAllNeurons(-1.0, 1.0, 0.01);
+        }
+
+        if (File.Exists("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\OutputLayer.txt")) {
+            outputLayer = ReadFromBinaryFile<LinearNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\OutputLayer.txt");
+        } else {
+            outputLayer = new LinearNetwork(10 * 10, 21, randomGenerator);
+            outputLayer.RandomizeWeightsOfAllNeurons(-1.0, 1.0, 0.01);
+        }
+
+        //WriteToBinaryFile<SelfOrganisingNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\KohonensNetwork.txt", kohonensNetwork);
+        //WriteToBinaryFile<LinearNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\OutputLayer.txt", outputLayer);
+
+        print(kohonensNetwork.neurons[0, 0].GetWeights()[0] + " / " + outputLayer.neurons[0].GetWeights()[0]);
     }
 	
 	// Update is called once per frame
@@ -87,16 +133,19 @@ public class ModelController : MonoBehaviour {
         //----------------------FINISHED CREATION OF INPUT SIGNALS FOR KOHONEN'S NETWORK-------------------------
 
         double[] kohonensNetworkResponse = kohonensNetwork.Response(inputSignals);
+        print("Kohonen = " + kohonensNetworkResponse[0] + ", " + kohonensNetworkResponse[13] + ", " + kohonensNetworkResponse[20]);
         //print(kohonensNetworkResponse[0] + ", " + kohonensNetworkResponse[21] + ", " + kohonensNetworkResponse[80]);
 
-        double[] outputLayerResponse = outputLayer.Response(Normalize(kohonensNetworkResponse));
-        outputLayerResponse = Normalize(outputLayerResponse);
+        //double[] outputLayerResponse = outputLayer.Response(Normalize(kohonensNetworkResponse));
+        double[] outputLayerResponse = outputLayer.Response(kohonensNetworkResponse);
+        print("Wyjsciowa = " + outputLayerResponse[0] + ", " + outputLayerResponse[13] + ", " + outputLayerResponse[20]);
+        //outputLayerResponse = Normalize(outputLayerResponse);
 
         for (int i = 0; i < movableParts.Length; i++) {
             movableParts[i].Move((float)outputLayerResponse[(3 * i)], (float)outputLayerResponse[(3 * i) + 1], (float)outputLayerResponse[(3 * i) + 2]);
         }
 
-        print(movableParts[0].transform.rotation.eulerAngles.x); // Rotation of Spine
+        //print(movableParts[0].transform.rotation.eulerAngles.x); // Rotation of Spine
         //print(MeasureDistance());
     }
 
