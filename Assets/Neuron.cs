@@ -61,22 +61,6 @@ namespace NeuralNetwork {
             }
         }
 
-        // Self learning with maximum
-/*        public void SelfLearn(double[] inputSignals, double etha, double max) {
-            double previous_response = Response(inputSignals);
-
-            if (previous_response < 0.2 * max)
-                previous_response *= 0.3;
-            if (previous_response < 0)
-                previous_response *= 0.1;
-
-            for (int i = 0; i < weights.Length; i++) {
-                previousWeights[i] = weights[i];
-                weights[i] += etha * previous_response * (inputSignals[i] - weights[i]);
-            }
-        }
-
-*/
         // Generate random value for each weight (between min and max)
         public void RandomizeWeights(Random randomGenerator, double min, double max, double epsilon) {
             double length = max - min;

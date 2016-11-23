@@ -86,8 +86,10 @@ public class ModelController : MonoBehaviour {
         System.Random randomGenerator = new System.Random();
 
         if (File.Exists("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\KohonensNetwork.txt")) {
+						print("True");
             kohonensNetwork = ReadFromBinaryFile<SelfOrganisingNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\KohonensNetwork.txt");
         } else {
+						print("False");
             kohonensNetwork = new SelfOrganisingNetwork(23, 10, 10, randomGenerator); // We set manually size of Kohonen's network as 10x10
             kohonensNetwork.RandomizeWeightsOfAllNeurons(-1.0, 1.0, 0.01);
         }
@@ -102,7 +104,7 @@ public class ModelController : MonoBehaviour {
         //WriteToBinaryFile<SelfOrganisingNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\KohonensNetwork.txt", kohonensNetwork);
         //WriteToBinaryFile<LinearNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\OutputLayer.txt", outputLayer);
 
-        print(kohonensNetwork.neurons[0, 0].GetWeights()[0] + " / " + outputLayer.neurons[0].GetWeights()[0]);
+        //print(kohonensNetwork.neurons[0, 0].GetWeights()[0] + " / " + outputLayer.neurons[0].GetWeights()[0]);
     }
 	
 	// Update is called once per frame
@@ -133,17 +135,20 @@ public class ModelController : MonoBehaviour {
         //----------------------FINISHED CREATION OF INPUT SIGNALS FOR KOHONEN'S NETWORK-------------------------
 
         double[] kohonensNetworkResponse = kohonensNetwork.Response(inputSignals);
-        print("Kohonen = " + kohonensNetworkResponse[0] + ", " + kohonensNetworkResponse[13] + ", " + kohonensNetworkResponse[20]);
+        //print("Kohonen = " + kohonensNetworkResponse[0] + ", " + kohonensNetworkResponse[13] + ", " + kohonensNetworkResponse[80]);
         //print(kohonensNetworkResponse[0] + ", " + kohonensNetworkResponse[21] + ", " + kohonensNetworkResponse[80]);
 
         //double[] outputLayerResponse = outputLayer.Response(Normalize(kohonensNetworkResponse));
         double[] outputLayerResponse = outputLayer.Response(kohonensNetworkResponse);
-        print("Wyjsciowa = " + outputLayerResponse[0] + ", " + outputLayerResponse[13] + ", " + outputLayerResponse[20]);
+        //print("Wyjsciowa = " + outputLayerResponse[0] + ", " + outputLayerResponse[13] + ", " + outputLayerResponse[20]);
         //outputLayerResponse = Normalize(outputLayerResponse);
 
         for (int i = 0; i < movableParts.Length; i++) {
             movableParts[i].Move((float)outputLayerResponse[(3 * i)], (float)outputLayerResponse[(3 * i) + 1], (float)outputLayerResponse[(3 * i) + 2]);
         }
+
+				print(kohonensNetwork.neurons[0, 0].GetWeights()[0]);
+				kohonensNetwork.Learn(inputSignals);
 
         //print(movableParts[0].transform.rotation.eulerAngles.x); // Rotation of Spine
         //print(MeasureDistance());

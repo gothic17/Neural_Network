@@ -67,31 +67,16 @@ namespace NeuralNetwork {
             return new int[] { x, y };
         }
 
-        internal void PerformTeaching(double[] inputSignals) {
-            double _oldmin = 10000;
-            int _imin = 1;
-            int _jmin = 1;
+        public void Learn(double[] inputSignals) {
+            double odlmin = 10000;
             double alpha;
             double odl = 0.0;
 
-            // Find smallest distance between vector of input signals and neuron's weights and [i, j] location of the most active neuron
-            for (int i = 0; i < netSizeX; i++) {
-                for (int j = 0; j < netSizeY; j++) {
-                    for (int k = 0; k < neurons[i, j].numberOfInputs; k++) {
-                        odl += Math.Pow(neurons[i, j].GetWeights()[k] - inputSignals[k], 2);
-                    }
-                    odl = Math.Sqrt(odl);
+						int imin = Winner(inputSignals)[0];
+            int jmin = Winner(inputSignals)[1];
 
-                    if (odl < _oldmin) {
-                        _oldmin = odl;
-                        _imin = i;
-                        _jmin = j;
-                    }
-                }
-            }
-
-            double _alpha0 = 0.1;
-            double _alpha1 = 0.02;
+            double alpha0 = 0.1;
+            double alpha1 = 0.02;
             int min;
             int max;
             min = netSizeX;
@@ -103,26 +88,27 @@ namespace NeuralNetwork {
                 max = netSizeY;
 
             // Round neighbour
-            int s = Convert.ToInt16(min + max) / 4.0 + 1; // s is here instead of neighbour
+            int s = Convert.ToInt32((min + max) / 4.0 + 1); // s is here instead of neighbour
             //int s = Convert.ToInt16(Neighbour);
 
-            for (int i = _imin - s; i <= _imin + s; i++) {
+            for (int i = imin - s; i <= imin + s; i++) {
                 if (i >= 0 && i < netSizeX) {
-                    for (int j = _jmin - s; j <= _jmin + s; j++) {
+                    for (int j = jmin - s; j <= jmin + s; j++) {
                         if (j >= 0 && j < netSizeY) {
-                            odl = Math.Abs(i - _imin);
+                            odl = Math.Abs(i - imin);
 
-                            if (Math.Abs(j - _jmin) > odl)
-                                odl = Math.Abs(j - _jmin);
+                            if (Math.Abs(j - jmin) > odl)
+                                odl = Math.Abs(j - jmin);
 
                             if (odl <= s) {
                                 if (s > 0)
-                                    alpha = (_alpha0 * (s - odl) + _alpha1 * odl) / s;
+                                    alpha = (alpha0 * (s - odl) + alpha1 * odl) / s;
 
                                 else
-                                    alpha = _alpha0;
+                                    alpha = alpha0;
 
-                                _examinedNetwork.Learn(_teachingElement, _MapIndex(i, j), alpha);
+                                //_examinedNetwork.Learn(_teachingElement, _MapIndex(i, j), alpha);
+																neurons[i, j].SelfLearn(inputSignals, alpha);
                             }
                         }
                     }
