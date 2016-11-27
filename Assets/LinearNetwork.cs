@@ -26,6 +26,18 @@ namespace NeuralNetwork {
             }
         }
 
+        public void RestorePreviousWeights() {
+            for (int i = 0; i < neurons.Length; i++) {
+                neurons[i].RestorePreviousWeights();
+            }
+        }
+
+        public void RandomLearn(Random randomGenerator) {
+            for(int i = 0; i < neurons.Length; i++) {
+                neurons[i].RandomLearn(randomGenerator, 0.1); // 0.1 is etha
+            }
+        }
+
         public double[] Response(double[] inputSignals) {
             double[] response = new double[numberOfNeurons];
             for (int i = 0; i < numberOfNeurons; i++) {

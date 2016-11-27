@@ -4,8 +4,9 @@ namespace NeuralNetwork {
     [Serializable]
     public class Neuron {
         public int numberOfInputs;
-        private double[] weights;
-        private double[] previousWeights;
+        public double[] weights;
+        public double[] previousWeights;
+        public double p0;
 
         // Creates weights and previousWeights of neuron (it's number is numberOfInputs)
         public Neuron(int numberOfInputs) {
@@ -17,6 +18,12 @@ namespace NeuralNetwork {
         // Sigmoidal function used on output of a neuron. output - signal, that will be modified, t - param of sigmoidal function (it is used in exponential function)
         public double ActivationFunction(double output, double t) {
             return 1.0 / (1.0 + Math.Exp(-t * output));
+        }
+
+        public void RestorePreviousWeights() {
+            for (int i = 0; i < weights.Length; i++) {
+                weights[i] = previousWeights[i];
+            }
         }
 
         // It returns response of neuron - it is Sqrt(Sum(weight(i) * input(i)))
@@ -53,6 +60,38 @@ namespace NeuralNetwork {
             }
         }
 
+       /* public void Learn(double[] signals, double[] previous_weights, double error, double sigma, double ratio, double momentum) {
+            for (int i = 0; i < weights.Length; i++)
+                weights[i] += ratio * sigma * signals[i] - momentum * (weights[i] - previous_weights[i]);
+        }*/
+
+        /* dodane dla przykladu 10a,ax,b */
+        public void Learn(double[] signals, double etha) {
+            double previous_response = Response(signals);
+
+            for (int i = 0; i < weights.Length; i++) {
+                previousWeights[i] = weights[i];
+                weights[i] += etha * previous_response * (signals[i] - weights[i]);
+            }
+        }
+
+        public void RandomLearn(Random randomGenerator, double etha) {
+            double length = 2.0;
+            double p = -1.0 + length * randomGenerator.NextDouble(); // Generate random variable p from [-1.0, 1.0], which will be added to our weights
+            p0 = p;
+            //double previous_response = Response(signals);
+
+            /*for (int i = 0; i < weights.Length; i++) {
+                previousWeights[i] = weights[i];
+                weights[i] += etha * previous_response * (signals[i] - weights[i]);
+            }*/
+            for (int i = 0; i < weights.Length; i++) {
+                previousWeights[i] = weights[i];
+                weights[i] += (p * weights[i]);
+            }
+        }
+
+
         // Self learning
         public void SelfLearn(double[] inputSignals, double etha) {
             for (int i = 0; i < weights.Length; i++) {
@@ -66,8 +105,10 @@ namespace NeuralNetwork {
             double length = max - min;
             for (int i = 0; i < weights.Length; i++) {
                 weights[i] = min + length * randomGenerator.NextDouble();
-                if (Math.Abs(weights[i]) < epsilon)
+                if (Math.Abs(weights[i]) < epsilon) {
                     weights[i] = epsilon;
+                }
+                previousWeights[i] = weights[i];
             }
         }
 

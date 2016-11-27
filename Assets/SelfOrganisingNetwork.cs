@@ -72,7 +72,7 @@ namespace NeuralNetwork {
             double alpha;
             double odl = 0.0;
 
-						int imin = Winner(inputSignals)[0];
+			int imin = Winner(inputSignals)[0];
             int jmin = Winner(inputSignals)[1];
 
             double alpha0 = 0.1;
@@ -101,14 +101,13 @@ namespace NeuralNetwork {
                                 odl = Math.Abs(j - jmin);
 
                             if (odl <= s) {
-                                if (s > 0)
+                                if (s > 0) {
                                     alpha = (alpha0 * (s - odl) + alpha1 * odl) / s;
-
-                                else
+                                } else {
                                     alpha = alpha0;
-
+                                }
                                 //_examinedNetwork.Learn(_teachingElement, _MapIndex(i, j), alpha);
-																neurons[i, j].SelfLearn(inputSignals, alpha);
+								neurons[i, j].SelfLearn(inputSignals, alpha);
                             }
                         }
                     }
