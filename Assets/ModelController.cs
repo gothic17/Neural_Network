@@ -153,12 +153,12 @@ public class ModelController : MonoBehaviour {
             if ((currentSpineInclination > 4.0 && previousSpineInclination > 4.0 && currentSpineInclination < 180.0 && previousSpineInclination < 180.0 && (currentSpineInclination - previousSpineInclination) > 0.0) 
                 || (currentSpineInclination > 180.0 && previousSpineInclination > 180.0 && currentSpineInclination < 360.0 && previousSpineInclination < 360.0 && (currentSpineInclination - previousSpineInclination < 0.0))
                 || MeasureDistance() < previousDistance) {
-                print("Jest gorzej - przywracam wagi");
+                //print("Jest gorzej - przywracam wagi");
                 outputLayer.RestorePreviousWeights();
             }
-            print("PRZED Out = " + outputLayer.neurons[2].weights[0]);
+            //print("PRZED Out = " + outputLayer.neurons[2].weights[0]);
             outputLayer.RandomLearn(randomGenerator);
-            print("PO    Out = " + outputLayer.neurons[2].weights[0] + " / " + outputLayer.neurons[2].p0);
+            //print("PO    Out = " + outputLayer.neurons[2].weights[0] + " / " + outputLayer.neurons[2].p0);
         }
 
 
@@ -174,7 +174,7 @@ public class ModelController : MonoBehaviour {
         for (int i = 0; i < movableParts.Length; i++) {
             movableParts[i].Move((float)outputLayerResponse[(3 * i)], (float)outputLayerResponse[(3 * i) + 1], (float)outputLayerResponse[(3 * i) + 2]);
         }
-        //print(kohonensNetwork.neurons[13, 13].weights[20] + " , " + kohonensNetwork.neurons[27, 2].weights[3] + ", " + kohonensNetwork.neurons[33, 16].weights[12]);
+        print(kohonensNetwork.neurons[13, 13].weights[20] + " , " + kohonensNetwork.neurons[27, 2].weights[3] + ", " + kohonensNetwork.neurons[33, 16].weights[12]);
 
         WriteToBinaryFile<SelfOrganisingNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\KohonensNetwork.txt", kohonensNetwork);
         WriteToBinaryFile<LinearNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\OutputLayer.txt", outputLayer);
