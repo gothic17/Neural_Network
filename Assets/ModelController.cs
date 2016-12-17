@@ -4,6 +4,9 @@ using System.IO;
 using System.Xml;
 using System.Xml.Serialization;
 using NeuralNetwork;
+using System.Diagnostics;
+
+
 
 public class ModelController : MonoBehaviour {
 	public Collider[] colliders;
@@ -15,6 +18,7 @@ public class ModelController : MonoBehaviour {
     private double previousSpineInclination = 0.0;
     System.Random randomGenerator;
     private double previousDistance;
+    private double[] previousMoves;
 
     // Returns strength of given array. It is calculated according to the Euclidean norm - 
     // Sqrt(Sum(weight(i)^2)). It can be later expanded to use other norms.
@@ -37,15 +41,6 @@ public class ModelController : MonoBehaviour {
         return inputSignals;
     }
 
-    /// <summary>
-    /// Writes the given object instance to a binary file.
-    /// <para>Object type (and all child types) must be decorated with the [Serializable] attribute.</para>
-    /// <para>To prevent a variable from being serialized, decorate it with the [NonSerialized] attribute; cannot be applied to properties.</para>
-    /// </summary>
-    /// <typeparam name="T">The type of object being written to the XML file.</typeparam>
-    /// <param name="filePath">The file path to write the object instance to.</param>
-    /// <param name="objectToWrite">The object instance to write to the XML file.</param>
-    /// <param name="append">If false the file will be overwritten if it already exists. If true the contents will be appended to the file.</param>
     public static void WriteToBinaryFile<T>(string filePath, T objectToWrite, bool append = false) {
         using (Stream stream = File.Open(filePath, append ? FileMode.Append : FileMode.Create)) {
             var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
@@ -53,12 +48,6 @@ public class ModelController : MonoBehaviour {
         }
     }
 
-    /// <summary>
-    /// Reads an object instance from a binary file.
-    /// </summary>
-    /// <typeparam name="T">The type of object to read from the XML.</typeparam>
-    /// <param name="filePath">The file path to read the object instance from.</param>
-    /// <returns>Returns a new instance of the object read from the binary file.</returns>
     public static T ReadFromBinaryFile<T>(string filePath) {
         using (Stream stream = File.Open(filePath, FileMode.Open)) {
             var binaryFormatter = new System.Runtime.Serialization.Formatters.Binary.BinaryFormatter();
@@ -66,10 +55,114 @@ public class ModelController : MonoBehaviour {
         }
     }
 
+    private void run_cmd(string cmd, string args) {
+        ProcessStartInfo start = new ProcessStartInfo();
+        start.FileName = cmd;//cmd is full path to python.exe
+        start.Arguments = args;//args is path to .py file and any cmd line args
+        start.UseShellExecute = false;
+        start.RedirectStandardOutput = true;
+        using (Process process = Process.Start(start)) {
+            using (StreamReader reader = process.StandardOutput) {
+                string result = reader.ReadToEnd();
+                Console.Write(result);
+            }
+        }
+    }
+
+    public static bool IsFileReady(String sFilename) {
+        // If the file can be opened for exclusive access it means that the file
+        // is no longer locked by another process.
+        try {
+            using (FileStream inputStream = File.Open(sFilename, FileMode.Open, FileAccess.Read, FileShare.None)) {
+                if (inputStream.Length > 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (Exception) {
+            return false;
+        }
+    }
+
+    public double MeasureDistance() {
+        //return Math.Sqrt(Math.Pow(gameObject.transform.GetChild(0).GetChild(0).position.x - initialPosition.x, 2) + Math.Pow(gameObject.transform.GetChild(0).GetChild(0).position.y - initialPosition.y, 2));
+        return gameObject.transform.GetChild(0).GetChild(0).position.z - initialPosition.z;
+    }
+
+    public double SpineForward() {
+        previousMoves[0] = previousMoves[0] - 0.5;
+        return previousMoves[0];
+    }
+
+    public double SpineBackward() {
+        previousMoves[0] = previousMoves[0] + 0.5;
+        return previousMoves[0];
+    }
+
+    public double UpperLegLForward() {
+        previousMoves[1] = previousMoves[1] - 0.5;
+        return previousMoves[1];
+    }
+
+    public double UpperLegLBackward() {
+        previousMoves[1] = previousMoves[1] + 0.5;
+        return previousMoves[1];
+    }
+
+    public double LowerLegLForward() {
+        previousMoves[2] = previousMoves[2] + 0.5;
+        return previousMoves[2];
+    }
+
+    public double LowerLegLBackward() {
+        previousMoves[2] = previousMoves[2] - 0.5;
+        return previousMoves[2];
+    }
+
+    public double FootLForward() {
+        previousMoves[3] = previousMoves[3] + 0.5;
+        return previousMoves[3];
+    }
+
+    public double FootLBackward() {
+        previousMoves[3] = previousMoves[3] - 0.5;
+        return previousMoves[3];
+    }
+
+    public double UpperLegRForward() {
+        previousMoves[4] = previousMoves[4] - 0.5;
+        return previousMoves[4];
+    }
+
+    public double UpperLegRBackward() {
+        previousMoves[4] = previousMoves[4] + 0.5;
+        return previousMoves[4];
+    }
+
+    public double LowerLegRForward() {
+        previousMoves[5] = previousMoves[5] + 0.5;
+        return previousMoves[5];
+    }
+
+    public double LowerLegRBackward() {
+        previousMoves[5] = previousMoves[5] - 0.5;
+        return previousMoves[5];
+    }
+
+    public double FootRForward() {
+        previousMoves[6] = previousMoves[6] + 0.5;
+        return previousMoves[6];
+    }
+
+    public double FootRBackward() {
+        previousMoves[6] = previousMoves[6] - 0.5;
+        return previousMoves[6];
+    }
+
     // Use this for initialization
     void Start () {
         initialPosition = gameObject.transform.GetChild(0).GetChild(0).position;
-        //colliders = gameObject.FindObjectsOfType(Collider) as Collider[];
         moveJoints = GetComponentsInChildren<MoveJoint>();
 
 		// Initialization of variables in every moveJoint
@@ -86,49 +179,47 @@ public class ModelController : MonoBehaviour {
         movableParts[5] = moveJoints[10]; // LowerLeg.R
         movableParts[6] = moveJoints[11]; // Foot.R
 
+        // Set each cell in previousMoves table to 0 (beginning state of each MovablePart)
+        previousMoves = new double[7];
+        for (int i = 0; i < 7; i++) {
+            previousMoves[i] = 0.0;
+        }
+
         previousSpineInclination = movableParts[0].transform.rotation.eulerAngles.x; // Save inclination of spine
-
-        randomGenerator = new System.Random();
-
-        if (File.Exists("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\KohonensNetwork.txt")) {
-			print("True");
-            kohonensNetwork = ReadFromBinaryFile<SelfOrganisingNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\KohonensNetwork.txt");
-        } else {
-			print("False");
-            kohonensNetwork = new SelfOrganisingNetwork(23, 50, 50, randomGenerator); // We set manually size of Kohonen's network as 10x10
-            kohonensNetwork.RandomizeWeightsOfAllNeurons(-1.0, 1.0, 0.01);
-        }
-
-        if (File.Exists("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\OutputLayer.txt")) {
-            outputLayer = ReadFromBinaryFile<LinearNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\OutputLayer.txt");
-        } else {
-            outputLayer = new LinearNetwork(50 * 50, 21, randomGenerator);
-            outputLayer.RandomizeWeightsOfAllNeurons(-1.0, 1.0, 0.01);
-        }
-
-        previousDistance = MeasureDistance();
-
-        //WriteToBinaryFile<SelfOrganisingNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\KohonensNetwork.txt", kohonensNetwork);
-        //WriteToBinaryFile<LinearNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\OutputLayer.txt", outputLayer);
-
-        //print(kohonensNetwork.neurons[0, 0].GetWeights()[0] + " / " + outputLayer.neurons[0].GetWeights()[0]);
+        previousDistance = MeasureDistance(); // Save distance (probably equal to 0)
+        randomGenerator = new System.Random(); // Create new Random Generator
     }
 	
 	// Update is called once per frame
 	void Update () {
         Time.timeScale = 1.0F;
-
-        double[] inputSignals = new double[23];
+        //print(gameObject.transform.GetChild(0).rotation.eulerAngles.x);
+        double[] inputSignals = new double[24];
+        // Version with just transfrom.position.x/y/z
+        /*
         // First three fields of inputSignals are positions of Spine
         inputSignals[0] = movableParts[0].transform.position.x;
         inputSignals[1] = movableParts[0].transform.position.y;
         inputSignals[2] = movableParts[0].transform.position.z;
-        //print("Spine = " + movableParts[0].transform.eulerAngles.x + ", " + movableParts[0].transform.eulerAngles.y + ", " + movableParts[0].transform.eulerAngles.z);
+        
         for (int i = 1; i < movableParts.Length; i++) { // In this loop we set difference between movableParts positions and Spine position
             inputSignals[(3*i)] = movableParts[i].transform.position.x - inputSignals[0];
             inputSignals[(3 * i) + 1] = movableParts[i].transform.position.y - inputSignals[1];
             inputSignals[(3 * i) + 2] = movableParts[i].transform.position.z - inputSignals[2];
+        }*/
+        // Version with transform.eulerAngles.x/y/z
+        // First three fields of inputSignals are positions of Spine
+        inputSignals[0] = movableParts[0].transform.rotation.eulerAngles.x;
+        inputSignals[1] = movableParts[0].transform.rotation.eulerAngles.y;
+        inputSignals[2] = movableParts[0].transform.rotation.eulerAngles.z;
+
+        for (int i = 1; i < movableParts.Length; i++) { // In this loop we set difference between movableParts positions and Spine position
+            inputSignals[(3 * i)] = movableParts[i].transform.rotation.eulerAngles.x - inputSignals[0];
+            inputSignals[(3 * i) + 1] = movableParts[i].transform.rotation.eulerAngles.y - inputSignals[1];
+            inputSignals[(3 * i) + 2] = movableParts[i].transform.rotation.eulerAngles.z - inputSignals[2];
         }
+
+
         // Collisions of right and left foot
         if (movableParts[3].transform.GetComponent<OnCollision>().GetTouchingFloor() == false) inputSignals[21] = -1.0;
         else inputSignals[21] = 1.0;
@@ -136,57 +227,114 @@ public class ModelController : MonoBehaviour {
         if (movableParts[6].transform.GetComponent<OnCollision>().GetTouchingFloor() == false) inputSignals[22] = -1.0;
         else inputSignals[22] = 1.0;
         double footRTouchingGround = inputSignals[22];
+        // Last variable is distance traveled from initial position
+        inputSignals[23] = MeasureDistance();
 
-        //inputSignals = Normalize(inputSignals); // We have to normalize all signals, but last two cells of arrays are true/false variables telling, if foots are touching the ground, so we should restore them to values -1 or 1
-        inputSignals[21] = footLTouchingGround;
-        inputSignals[22] = footRTouchingGround;
-        //----------------------TEACH NETWORKS-------------------------
+        /*for (int i = 0; i < 3; i++) {
+            print(i + " = " + inputSignals[i]);
+        }*/
 
+        String args = "";
+        for (int i = 0; i < 24; i++) {
+            if (i != 23) {
+                args += inputSignals[i] + Environment.NewLine;
+            } else {
+                args += inputSignals[i];
+            }
+        }
 
-		//print(kohonensNetwork.neurons[2, 5].GetWeights()[0] + " / " + kohonensNetwork.neurons[0, 3].GetWeights()[12] + " / " + kohonensNetwork.neurons[9, 9].GetWeights()[20]);
-		kohonensNetwork.Learn(inputSignals);
+        bool isFileReady = false;
+        while (!isFileReady) {
+            isFileReady = IsFileReady(@"Assets\input.txt");
+        }
+        System.IO.StreamWriter inputFile = new System.IO.StreamWriter(@"Assets\input.txt");
+        inputFile.WriteLine(args);
+        inputFile.Close();
 
         double currentSpineInclination = movableParts[0].transform.eulerAngles.x;
+        double[] output = new double[24];
 
-        if (currentSpineInclination > 4.0 || currentSpineInclination < 2.0) { // If current spine inclination is out of desired range teach output layer
-            // Current case is worse than the previous one
-            if ((currentSpineInclination > 4.0 && previousSpineInclination > 4.0 && currentSpineInclination < 180.0 && previousSpineInclination < 180.0 && (currentSpineInclination - previousSpineInclination) > 0.0) 
-                || (currentSpineInclination > 180.0 && previousSpineInclination > 180.0 && currentSpineInclination < 360.0 && previousSpineInclination < 360.0 && (currentSpineInclination - previousSpineInclination < 0.0))
-                || MeasureDistance() < previousDistance) {
-                //print("Jest gorzej - przywracam wagi");
-                outputLayer.RestorePreviousWeights();
+        isFileReady = false;
+        while (!isFileReady) {
+            isFileReady = IsFileReady(@"Assets\output.txt");
+        }
+        // Read the file and display it line by line.
+        //System.IO.StreamReader outputFile = new System.IO.StreamReader(@"Assets\output.txt");        
+        //outputFile.Close();
+        string outputText = File.ReadAllText(@"Assets\output.txt");
+        string[] lines = outputText.Split(new string[] { Environment.NewLine }, StringSplitOptions.None);
+        for (int i = 0; i < lines.Length; i++) {
+            if (!lines[i].Equals("")) {
+                output[i] = Double.Parse(lines[i]);
             }
-            //print("PRZED Out = " + outputLayer.neurons[2].weights[0]);
-            outputLayer.RandomLearn(randomGenerator);
-            //print("PO    Out = " + outputLayer.neurons[2].weights[0] + " / " + outputLayer.neurons[2].p0);
         }
 
-
-        //---------------------CALCULATE RESPONSE----------------------
-        double[] kohonensNetworkResponse = kohonensNetwork.Response(inputSignals);
-        //print("Kohonen = " + kohonensNetworkResponse[0] + ", " + kohonensNetworkResponse[13] + ", " + kohonensNetworkResponse[80]);
-
-        //double[] outputLayerResponse = outputLayer.Response(Normalize(kohonensNetworkResponse));
-        double[] outputLayerResponse = outputLayer.Response(kohonensNetworkResponse);
-        //print("Wyjsciowa = " + outputLayerResponse[0] + ", " + outputLayerResponse[13] + ", " + outputLayerResponse[20]);
-        //outputLayerResponse = Normalize(outputLayerResponse);
-
-        for (int i = 0; i < movableParts.Length; i++) {
-            movableParts[i].Move((float)outputLayerResponse[(3 * i)], (float)outputLayerResponse[(3 * i) + 1], (float)outputLayerResponse[(3 * i) + 2]);
+        // Get maximal value among output of neural network
+        double maxOutput = -999999999.0;
+        int action = -1;
+        for (int i = 0; i < output.Length; i++) {
+            if (output[i] > maxOutput) {
+                maxOutput = output[i];
+                action = i;
+            }
         }
-        print(kohonensNetwork.neurons[13, 13].weights[20] + " , " + kohonensNetwork.neurons[27, 2].weights[3] + ", " + kohonensNetwork.neurons[33, 16].weights[12]);
 
-        WriteToBinaryFile<SelfOrganisingNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\KohonensNetwork.txt", kohonensNetwork);
-        WriteToBinaryFile<LinearNetwork>("C:\\Users\\Bartas\\Documents\\Unity_Projects\\Neural_Network\\Assets\\OutputLayer.txt", outputLayer);
-
-        //print(movableParts[0].transform.rotation.eulerAngles.x); // Rotation of Spine
-        //print(MeasureDistance());
+        //movableParts[0].Move((float)SpineForward(), 0.0F, 0.0F);
+        //movableParts[1].Move(0.0F, 0.0F, (float)UpperLegLForward());
+        //movableParts[2].Move((float)LowerLegLForward(), 0.0F, 0.0F);
+        //movableParts[3].Move((float)FootLForward(), 0.0F, 0.0F);
+        //movableParts[4].Move(0.0F, 0.0F, (float)UpperLegRForward());
+        //movableParts[5].Move((float)LowerLegRForward(), 0.0F, 0.0F);
+        //movableParts[6].Move((float)FootRForward(), 0.0F, 0.0F);
+        
+        switch (action) {
+            case 1:
+                movableParts[0].Move((float)SpineForward(), 0.0F, 0.0F);
+                break;
+            case 2:
+                movableParts[0].Move((float)SpineBackward(), 0.0F, 0.0F);
+                break;
+            case 3:
+                movableParts[1].Move(0.0F, 0.0F, (float)UpperLegLForward());
+                break;
+            case 4:
+                movableParts[1].Move(0.0F, 0.0F, (float)UpperLegLBackward());
+                break;
+            case 5:
+                movableParts[2].Move((float)LowerLegLForward(), 0.0F, 0.0F);
+                break;
+            case 6:
+                movableParts[2].Move((float)LowerLegLBackward(), 0.0F, 0.0F);
+                break;
+            case 7:
+                movableParts[3].Move((float)FootLForward(), 0.0F, 0.0F);
+                break;
+            case 8:
+                movableParts[3].Move((float)FootLBackward(), 0.0F, 0.0F);
+                break;
+            case 9:
+                movableParts[4].Move(0.0F, 0.0F, (float)UpperLegRForward());
+                break;
+            case 10:
+                movableParts[4].Move(0.0F, 0.0F, (float)UpperLegRBackward());
+                break;
+            case 11:
+                movableParts[5].Move((float)LowerLegRForward(), 0.0F, 0.0F);
+                break;
+            case 12:
+                movableParts[5].Move((float)LowerLegRBackward(), 0.0F, 0.0F);
+                break;
+            case 13:
+                movableParts[6].Move((float)FootRForward(), 0.0F, 0.0F);
+                break;
+            case 14:
+                movableParts[6].Move((float)FootRBackward(), 0.0F, 0.0F);
+                break;
+        }
 
         previousDistance = MeasureDistance();
+        //print(previousDistance);
         previousSpineInclination = currentSpineInclination;
-    }
-
-    double MeasureDistance() {
-        return Math.Sqrt(Math.Pow(gameObject.transform.GetChild(0).GetChild(0).position.x - initialPosition.x, 2) + Math.Pow(gameObject.transform.GetChild(0).GetChild(0).position.y - initialPosition.y, 2));
+        
     }
 }

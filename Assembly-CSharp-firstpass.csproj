@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <RootNamespace></RootNamespace>
+    <ProjectGuid>{55686F93-4A3F-8BE8-9237-AB784E909696}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_4_0;UNITY_5_4;UNITY_5;UNITY_ANALYTICS;ENABLE_NEW_BUGREPORTER;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_EDITOR_RETINA;ENABLE_RETINA_GUISTYLES;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_SPRITE_POLYGON;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;ENABLE_EDITOR_TESTS_RUNNER;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Temp\bin\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Plugins\Examples\PythonHelloWorld.cs" />
+     <Compile Include="Assets\Plugins\Examples\PythonLibrary.cs" />
+     <Compile Include="Assets\Plugins\Examples\PythonUnityHelloWorld.cs" />
+     <Compile Include="Assets\Plugins\Scripts\UnityPython.cs" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_37.txt" />
+     <None Include="Assets\Plugins\Lib\test\ieee754.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_30.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_22.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_13.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_32.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_12.txt" />
+     <None Include="Assets\Plugins\LICENSE_UnityPython.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_01.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_26.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_40.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_42.txt" />
+     <None Include="Assets\Plugins\Lib\test\test.xml" />
+     <None Include="Assets\Plugins\Lib\test\tokenize_tests.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_04.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_34.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_18.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_25.txt" />
+     <None Include="Assets\KohonensNetwork.txt" />
+     <None Include="Assets\Plugins\README_Python.txt" />
+     <None Include="Assets\Plugins\Lib\idlelib\CREDITS.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_03.txt" />
+     <None Include="Assets\Plugins\LICENSE_IronPython.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_39.txt" />
+     <None Include="Assets\Plugins\Lib\lib2to3\PatternGrammar.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_14.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_17.txt" />
+     <None Include="Assets\Plugins\Lib\idlelib\extend.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_27.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_20.txt" />
+     <None Include="Assets\Plugins\LICENSE_Python.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_05.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_23.txt" />
+     <None Include="Assets\Plugins\Lib\test\leakers\README.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_45.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_38.txt" />
+     <None Include="Assets\Plugins\Lib\idlelib\help.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_16.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_31.txt" />
+     <None Include="Assets\Plugins\Lib\idlelib\TODO.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_12a.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_28.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_33.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_06.txt" />
+     <None Include="Assets\Plugins\Lib\test\exception_hierarchy.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_08.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_15.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_11.txt" />
+     <None Include="Assets\Plugins\Lib\idlelib\HISTORY.txt" />
+     <None Include="Assets\Plugins\Lib\lib2to3\Grammar.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_35.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_02.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_44.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_24.txt" />
+     <None Include="Assets\Plugins\Lib\test\test_doctest.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_46.txt" />
+     <None Include="Assets\Plugins\Lib\test\floating_points.txt" />
+     <None Include="Assets\Plugins\Lib\idlelib\NEWS.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_21.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_43.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_10.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_29.txt" />
+     <None Include="Assets\Plugins\Lib\test\cmath_testcases.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_09.txt" />
+     <None Include="Assets\Testowa_siec.txt" />
+     <None Include="Assets\Plugins\Lib\test\test_doctest4.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_41.txt" />
+     <None Include="Assets\Plugins\Lib\test\test_doctest2.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_36.txt" />
+     <None Include="Assets\OutputLayer.txt" />
+     <None Include="Assets\Plugins\Lib\idlelib\README.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_07.txt" />
+     <None Include="Assets\Plugins\Lib\email\test\data\msg_19.txt" />
+     <None Include="Assets\Plugins\Lib\test\test_doctest3.txt" />
+ <Reference Include="UnityEngine.UI">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Networking">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Analytics">
+ <HintPath>C:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ </Reference>
+ <Reference Include="IronPython">
+ <HintPath>C:/Users/Bartas/Documents/Unity_Projects/Neural_Network/Assets/Plugins/IronPython-2.6.2/IronPython.dll</HintPath>
+ </Reference>
+ <Reference Include="IronPython.Modules">
+ <HintPath>C:/Users/Bartas/Documents/Unity_Projects/Neural_Network/Assets/Plugins/IronPython-2.6.2/IronPython.Modules.dll</HintPath>
+ </Reference>
+ <Reference Include="Microsoft.Dynamic">
+ <HintPath>C:/Users/Bartas/Documents/Unity_Projects/Neural_Network/Assets/Plugins/IronPython-2.6.2/Microsoft.Dynamic.dll</HintPath>
+ </Reference>
+ <Reference Include="Microsoft.Scripting.Core">
+ <HintPath>C:/Users/Bartas/Documents/Unity_Projects/Neural_Network/Assets/Plugins/IronPython-2.6.2/Microsoft.Scripting.Core.dll</HintPath>
+ </Reference>
+ <Reference Include="Microsoft.Scripting.Debugging">
+ <HintPath>C:/Users/Bartas/Documents/Unity_Projects/Neural_Network/Assets/Plugins/IronPython-2.6.2/Microsoft.Scripting.Debugging.dll</HintPath>
+ </Reference>
+ <Reference Include="Microsoft.Scripting">
+ <HintPath>C:/Users/Bartas/Documents/Unity_Projects/Neural_Network/Assets/Plugins/IronPython-2.6.2/Microsoft.Scripting.dll</HintPath>
+ </Reference>
+ <Reference Include="Microsoft.Scripting.ExtensionAttribute">
+ <HintPath>C:/Users/Bartas/Documents/Unity_Projects/Neural_Network/Assets/Plugins/IronPython-2.6.2/Microsoft.Scripting.ExtensionAttribute.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>
