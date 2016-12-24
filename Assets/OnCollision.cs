@@ -16,7 +16,8 @@ public class OnCollision : MonoBehaviour {
             /*if (this.name.Equals("Spine") || this.name.Equals("Chest") || this.name.Equals("Neck") || this.name.Equals("Head") ||
 			    this.name.Equals("Shoulder.R") || this.name.Equals("Shoulder.L") || this.name.Equals("UpperArm.R") || this.name.Equals("UpperArm.L") || 
 				this.name.Equals("LowerArm.R") || this.name.Equals("LowerArm.L")) {*/
-            if (this.name.Equals("Spine") || this.name.Equals("Chest") || this.name.Equals("Neck") || this.name.Equals("Head")) {
+            if (this.name.Equals("Spine") || this.name.Equals("Chest") || this.name.Equals("Neck") || this.name.Equals("Head") ||
+                this.name.Equals("Shoulder.R") || this.name.Equals("Shoulder.L") || this.name.Equals("UpperArm.r") || this.name.Equals("UpperArm.l")) {
                 //print("Aktualizacja sieci - Collider-" + this.name);
                 Scene scene = SceneManager.GetActiveScene(); 
 				SceneManager.LoadScene(scene.name);

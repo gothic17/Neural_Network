@@ -53,6 +53,7 @@
      <Compile Include="Assets\OnCollision.cs" />
      <Compile Include="Assets\SelfOrganisingNetwork.cs" />
      <None Include="Assets\KohonensNetwork.txt" />
+     <None Include="Assets\Modele\Opisy.txt" />
      <None Include="Assets\output.txt" />
      <None Include="Assets\input.txt" />
      <None Include="Assets\logs.txt" />

@@ -18,48 +18,48 @@ else:
     print("TWORZE NOWY MODEL")
     model = Sequential()
     #model.add(Dense(164, init='lecun_uniform', input_shape=(24,)))
-    model.add(Dense(164, init='lecun_uniform', input_shape=(24,)))
+    model.add(Dense(11, init='lecun_uniform', input_shape=(11,)))
     model.add(Activation('relu'))
     #model.add(Dropout(0.2)) #I'm not using dropout, but maybe you wanna give it a try?
+
+    model.add(Dense(164, init='lecun_uniform'))
+    model.add(Activation('relu'))
 
     model.add(Dense(150, init='lecun_uniform'))
     model.add(Activation('relu'))
     #model.add(Dropout(0.2))
 
-    model.add(Dense(14, init='lecun_uniform'))
+    model.add(Dense(10, init='lecun_uniform'))
     model.add(Activation('linear'))  # linear output so we can have range of real-valued outputs
 
     rms = RMSprop()
     model.compile(loss='mse', optimizer=rms)
 
-def getReward(spineInclination, distance, previousDistance):
-    """print("SPINE = " + str(spineInclination) + " | DISTANCE = " + str(distance)
-          + " | PREV_DISTANCE = " + str(previousDistance))
-    print(distance > previousDistance)
-    print(spineInclination > 0.0)
-    print(spineInclination < 90.0)"""
-    if distance > previousDistance or (spineInclination > 0.0 and spineInclination < 90.0):
-        return 10
-    else:
+def getReward(spineInclination, distance, previousDistance, spineHeight):
+    print("REWARD: height = " + str(spineHeight) + ", spine = " + str(spineInclination) + ", dist = " + str(distance) + ", prev_dist = " + str(previousDistance))
+    if (float(spineInclination) > 0.0 and float(spineInclination) < 90.0) and (distance > previousDistance):
+        if (float(spineHeight) > 0.8):
+            return 10
+        else:
+            return 5
+    elif distance < 0:
         return -5
+    else:
+        return -1
+
 
 def refactorInput(input):
-    footLTouchingGround = input[21]
-    footRTouchingGround = input[22]
-    #distance = input[23]
     # Measure strength of the input array
     strength = 0.0
-    for i in range (0, 24):
+    for i in range (0, 11):
         strength += math.pow(float(input[i]), 2.0)
     strength = math.sqrt(strength)
-    for i in range (0, 24):
+    for i in range (0, 11):
         input[i] = float(input[i]) / strength
-    input[21] = footLTouchingGround
-    input[22] = footRTouchingGround
     return input
 
 def runNetwork(string, previousDistance, epsilon, gamma, previousState, previousQval, previousAction):
-    mode = "learn"
+    mode = "run"
     while True:
         try:
             with open("C:\Users\Bartas\Documents\Unity_Projects\Neural_Network\Assets\\input.txt", "r") as file:
@@ -70,36 +70,39 @@ def runNetwork(string, previousDistance, epsilon, gamma, previousState, previous
             pass
     data = Data(previousState=None, previousQval=None, previousAction=None,
                 previousDistance=None, epsilon=epsilon)
-    if input.__len__() == 24:
+    y = [[previousQval]]
+    if input.__len__() == 11:
         if previousState == None or previousQval == None or previousAction == None:
             previousState = input
-            previousQval = model.predict(np.reshape(input, (1, 24)), batch_size=1)
+            previousQval = model.predict(np.reshape(input, (1, 11)), batch_size=1)
             previousAction = 0
-        spineInclination = input[0]
-        distance = input[23]
+        spineHeight = input[0]
+        spineInclination = input[1]
+        distance = input[10]
         #----------------------------
         if mode == "learn":
             print("LEARNING...")
             # Observe reward
-            reward = getReward(spineInclination, distance, previousDistance)
+            reward = getReward(spineInclination, distance, previousDistance, spineHeight)
             print("REWARD = " + str(reward))
             # Refactor input array
             input = refactorInput(input)
             # Get max_Q(S',a)
-            newQ = model.predict(np.reshape(input, (1, 24)), batch_size=1)
+            newQ = model.predict(np.reshape(input, (1, 11)), batch_size=1)
             maxQ = np.max(newQ)
-            y = np.zeros((1, 14))
+            y = np.zeros((1, 10))
             y[:] = previousQval[:] # previousQval are predictions (Q values) of network from previous run
             if reward == -1:  # non-terminal state
                 update = (reward + (gamma * maxQ))
             else:  # terminal state
                 update = reward
+            #update = (reward + (gamma * maxQ))
             y[0][previousAction] = update  # target output
             print("OUTPUT = " + str(y[0]))
             #print("Game #: %s" % (i,))
             #print("!!!!!!!! = " + str(previousState))
             #print np.reshape(previousState, (1, 24))
-            model.fit(np.reshape(previousState, (1, 24)), y, batch_size=1, nb_epoch=1, verbose=1)
+            model.fit(np.reshape(previousState, (1, 11)), y, batch_size=1, nb_epoch=1, verbose=1)
             #pickle.dump(model, open("C:\Users\Bartas\Documents\Unity_Projects\Neural_Network\Assets\\model.p", "wb"))
             previousState = input
             #if reward != -1:
@@ -108,19 +111,22 @@ def runNetwork(string, previousDistance, epsilon, gamma, previousState, previous
             #- - - - - - - - - - - - - - - - -
             # We are in state S
             # Let's run our Q function on S to get Q values for all possible actions
-            qval = model.predict(np.reshape(input, (1, 24)), batch_size=1) #?????
+            qval = model.predict(np.reshape(input, (1, 11)), batch_size=1) #?????
             if (random.random() < epsilon):  # choose random action
-                action = np.random.randint(0, 14)
+                action = np.random.randint(0, 10)
             else:  # choose best action from Q(s,a) values
                 action = (np.argmax(qval))
             if epsilon > 0.1:
-                epsilon -= 0.0001
+                epsilon -= 0.00005
             print("EPSILON = " + str(epsilon))
             # Take action, observe new state S'
             #new_state = makeMove(state, action)
         else:
             print("RUNNING...")
-            qval = model.predict(np.reshape(input, (1, 24)), batch_size=1)
+            input = refactorInput(input)
+            qval = model.predict(np.reshape(input, (1, 11)), batch_size=1)
+            y[:] = qval[:]
+            print("OUTPUT = " + str(y[0]))
             action = (np.argmax(qval))  # take action with highest Q-value
             print("ACTION = " + str(action))
         #---------------------------------------
@@ -130,9 +136,10 @@ def runNetwork(string, previousDistance, epsilon, gamma, previousState, previous
         data.previousDistance = distance
         data.epsilon = epsilon
     outputStr = ""
-    for i in range(len(input)):
-        ran = -1 + (2*random.uniform(0, 1))
-        outputStr += str(ran) + '\n'
+    for i in range(len(y[0])):
+        #ran = -1 + (2*random.uniform(0, 1))
+        #outputStr += str(ran) + '\n'
+        outputStr += str(y[0][i]) + '\n'
     while True:
         try:
             with open("C:\Users\Bartas\Documents\Unity_Projects\Neural_Network\Assets\output.txt", 'w') as file:
